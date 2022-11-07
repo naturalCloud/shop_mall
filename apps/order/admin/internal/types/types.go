@@ -7,4 +7,5 @@ type Request struct {
 
 type Response struct {
 	Message string `json:"message"`
+	Code    int32  `json:"code"`
 }

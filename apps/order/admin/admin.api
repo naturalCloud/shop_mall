@@ -4,6 +4,7 @@ type Request {
 
 type Response {
 	Message string `json:"message"`
+	Code    int32  `json:"code"`
 }
 
 service admin-api {
