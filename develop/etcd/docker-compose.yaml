@@ -1,0 +1,29 @@
+version: "3"
+services:
+  etcd1:
+    # etcd uses gcr.io/etcd-development/etcd as a primary container registry, and quay.io/coreos/etcd as secondary.
+    image: quay.io/coreos/etcd:v3.5.1  # 镜像
+    container_name: etcd1       # 容器名 --name
+    restart: always             # 总是重启
+    networks:
+      - etcd-net                # 使用的网络 --network
+    ports:                      # 端口映射 -p
+      - "2379:2379"
+      - "2380:2380"
+    environment:                # 环境变量 --env
+        - "ETCD_ADVERTISE_CLIENT_URLS=http://0.0.0.0:2379"
+        - "ETCD_LISTEN_CLIENT_URLS=http://0.0.0.0:2379"
+        - "ETCD_LISTEN_PEER_URLS=http://0.0.0.0:2380"
+        - "ETCD_INITIAL_ADVERTISE_PEER_URLS=http://0.0.0.0:2380"
+        - "ALLOW_NONE_AUTHENTICATION=yes"
+        - "ETCD_INITIAL_CLUSTER=node1=http://0.0.0.0:2380"
+        - "ETCD_NAME=node1"
+#        - "ETCD_DATA_DIR=/opt/bitnami/etcd/data"
+        - "ETCDCTL_API=3"                                       # 升级api版本，使用最新的v3 API
+    volumes:
+      - $PWD/etcd1_data:/etcd-data                       # 挂载的数据卷
+      - /etc/localtime:/etc/localtime
+
+networks:
+  etcd-net:           # 网络
+    driver: bridge    # 桥接模式
